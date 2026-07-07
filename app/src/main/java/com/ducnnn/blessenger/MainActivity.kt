@@ -18,9 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavHost
-import androidx.navigation.compose.rememberNavController
 import com.ducnnn.blessenger.navigation.AppNavigation
 import com.ducnnn.blessenger.ui.theme.BlessengerTheme
 
@@ -40,7 +37,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(
-    onNavigateToChatScreen: () -> Unit,
+    navigateToChatScreen: () -> Unit,
     viewModel: MainViewModel = viewModel()
 ) {
     Column(
@@ -55,7 +52,7 @@ fun MainScreen(
         Button(
             onClick = {
             viewModel.onButtonClicked()
-            onNavigateToChatScreen()
+            navigateToChatScreen()
         }) {
             Text(text = "Begin")
         }

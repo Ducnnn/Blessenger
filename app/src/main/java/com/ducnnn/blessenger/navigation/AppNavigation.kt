@@ -8,7 +8,8 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.ducnnn.blessenger.MainScreen
-import com.ducnnn.blessenger.ui.ChatScreen
+import com.ducnnn.blessenger.ui.BlessengerScreen
+
 
 @Composable
 fun AppNavigation() {
@@ -21,19 +22,16 @@ fun AppNavigation() {
         popTransitionSpec = { EnterTransition.None togetherWith ExitTransition.None },
         predictivePopTransitionSpec = { EnterTransition.None togetherWith ExitTransition.None },
         entryProvider = entryProvider {
-
             entry<MainScreenRoute> {
                 MainScreen(
-                    onNavigateToChatScreen = {
-                        backStack.add(ChatScreenRoute)
+                    navigateToChatScreen = {
+                        backStack.add(BlessengerScreenRoute)
                     }
                 )
             }
-
-            entry<ChatScreenRoute> {
-                ChatScreen()
+            entry<BlessengerScreenRoute> {
+                BlessengerScreen()
             }
-
         }
     )
 }

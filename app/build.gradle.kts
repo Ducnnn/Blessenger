@@ -39,6 +39,8 @@ android {
 }
 
 dependencies {
+    implementation("androidx.compose.material:material-icons-core")
+    implementation(libs.androidx.material3)
     implementation(libs.kotlinx.serialization.json)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
