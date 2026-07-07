@@ -1,15 +1,15 @@
 package com.ducnnn.blessenger.permission
 
-data class PermissionState(
+data class PermissionItemState(
     val permission: String,
-    val diplayName: String,
+    val displayName: String,
     val description: String,
     val isGranted: Boolean,
     val isPermanentlyDenied: Boolean
 )
 
 data class PermissionsScreenState(
-    val permissions: List<PermissionState> = emptyList(),
+    val permissions: List<PermissionItemState> = emptyList(),
     val allGranted: Boolean = false,
-    val showWationale: Boolean = false
+    val showRationale: Boolean = false
 )

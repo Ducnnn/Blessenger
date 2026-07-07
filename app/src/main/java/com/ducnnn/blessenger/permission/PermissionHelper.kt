@@ -49,22 +49,22 @@ object PermissionHelper {
         return getRequiredPermissions().map{it -> it.permission}.toTypedArray()
     }
 
-    fun isPermissionGaranted(context: Context, permission: String): Boolean {
+    fun isPermissionGranted(context: Context, permission: String): Boolean {
         return ContextCompat.checkSelfPermission(
             context,
             permission
         ) == PackageManager.PERMISSION_GRANTED
     }
 
-    fun areAllPermissionsGaranted(context: Context): Boolean {
+    fun areAllPermissionsGranted(context: Context): Boolean {
         return getRequiredPermissions().all {
-            info -> isPermissionGaranted(context, info.permission)
+            info -> isPermissionGranted(context, info.permission)
         }
     }
 
     fun getDeniedPermissions(context: Context): List<PermissionInfo> {
         return getRequiredPermissions().filter{
-            info -> !isPermissionGaranted(context, info.permission)
+            info -> !isPermissionGranted(context, info.permission)
         }
     }
 }
