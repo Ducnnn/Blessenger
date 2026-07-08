@@ -8,6 +8,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.ducnnn.blessenger.MainScreen
+import com.ducnnn.blessenger.ui.BlessengerScreen
 import com.ducnnn.blessenger.ui.ChatScreen
 import com.ducnnn.blessenger.permission.PermissionScreen
 
@@ -34,16 +35,14 @@ fun AppNavigation() {
             }
             entry<MainScreenRoute> {
                 MainScreen(
-                    onNavigateToChatScreen = {
-                        backStack.add(ChatScreenRoute)
+                    navigateToChatScreen = {
+                        backStack.add(BlessengerScreenRoute)
                     }
                 )
             }
-
-            entry<ChatScreenRoute> {
-                ChatScreen()
+            entry<BlessengerScreenRoute> {
+                BlessengerScreen()
             }
-
         }
     )
 }
