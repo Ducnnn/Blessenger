@@ -9,10 +9,12 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.ducnnn.blessenger.MainScreen
 import com.ducnnn.blessenger.ui.ChatScreen
+import com.ducnnn.blessenger.permission.PermissionScreen
+
 
 @Composable
 fun AppNavigation() {
-    val backStack = rememberNavBackStack(MainScreenRoute)
+    val backStack = rememberNavBackStack(PermissionScreenRoute)
 
     NavDisplay(
         backStack = backStack,
@@ -22,6 +24,14 @@ fun AppNavigation() {
         predictivePopTransitionSpec = { EnterTransition.None togetherWith ExitTransition.None },
         entryProvider = entryProvider {
 
+            entry<PermissionScreenRoute> {
+                PermissionScreen(
+                    onAllPermissionsGranted = {
+                        backStack.clear()
+                        backStack.add(MainScreenRoute)
+                    }
+                )
+            }
             entry<MainScreenRoute> {
                 MainScreen(
                     onNavigateToChatScreen = {
