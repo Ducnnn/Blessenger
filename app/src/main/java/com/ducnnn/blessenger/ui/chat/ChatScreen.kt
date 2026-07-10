@@ -43,7 +43,6 @@ fun ChatScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
@@ -110,7 +109,7 @@ fun ChatInput(
 }
 
 @Composable
-fun MessageBubble(message: BLEmessage) {
+fun MessageBubble(message: BLEMessage) {
     val alignment = if (message.fromCurrentUser) Alignment.CenterEnd else Alignment.CenterStart
     val bubbleColor = if (message.fromCurrentUser) {
         MaterialTheme.colorScheme.primaryContainer

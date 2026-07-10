@@ -1,4 +1,4 @@
-package com.ducnnn.blessenger.permission
+package com.ducnnn.blessenger.ui.permission
 
 import android.app.Activity
 import android.content.Context
@@ -7,20 +7,19 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
-import com.ducnnn.blessenger.permission.PermissionsScreenState
+import com.ducnnn.blessenger.permission.PermissionHelper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import com.ducnnn.blessenger.permission.PermissionPreferences
-import com.ducnnn.blessenger.permission.PermissionItemState
 
 class PermissionViewModel : ViewModel() {
 
-    private val _state =
+    private val _uiState =
         MutableStateFlow(PermissionsScreenState())
-    val state: StateFlow<PermissionsScreenState> =
-        _state.asStateFlow()
+    val uiState: StateFlow<PermissionsScreenState> =
+        _uiState.asStateFlow()
 
     private var permissionPreferences: PermissionPreferences? = null
 
@@ -62,7 +61,7 @@ class PermissionViewModel : ViewModel() {
             )
         }
 
-        _state.update {
+        _uiState.update {
             it.copy(
                 permissions = permissionStates,
                 allGranted = permissionStates.all { p ->

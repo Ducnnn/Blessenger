@@ -26,7 +26,7 @@ class ChatScreenViewModel : ViewModel() {
         val currentText = _uiState.value.inputText
         if (currentText.isBlank()) return
 
-        val newUserMessage = BLEmessage(
+        val newUserMessage = BLEMessage(
             text = currentText.trim(),
             sender = "MyUserID",
             fromCurrentUser = true
@@ -52,17 +52,17 @@ class ChatScreenViewModel : ViewModel() {
             //TODO(Implement loading message history here)
             //Dummy message history
             val history = listOf(
-                BLEmessage(
+                BLEMessage(
                     text = "Hello! How can I help you today?",
                     sender = "AnotherUserID",
                     fromCurrentUser = false
                 ),
-                BLEmessage(
+                BLEMessage(
                     text = "Hello! I'm Gleb",
                     sender = "AnotherUserID",
                     fromCurrentUser = false
                 ),
-                BLEmessage(
+                BLEMessage(
                     text = "I sent this message through BLE",
                     sender = "AnotherUserID",
                     fromCurrentUser = false
@@ -79,19 +79,3 @@ class ChatScreenViewModel : ViewModel() {
     }
 }
 
-enum class ChatMode(val value : String) {
-    MESH("Mesh group"), P2P("Contacts")
-}
-
-data class BLEmessage(
-    val text: String,
-    val sender: String,
-    val fromCurrentUser: Boolean
-)
-
-data class ChatUiState(
-    val messages: List<BLEmessage> = emptyList(),
-    val inputText: String = "",
-    val chatMode: ChatMode = ChatMode.MESH,
-    val isLoading: Boolean = false
-)

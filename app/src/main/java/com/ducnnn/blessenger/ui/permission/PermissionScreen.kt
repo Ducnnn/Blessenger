@@ -1,7 +1,6 @@
-package com.ducnnn.blessenger.permission
+package com.ducnnn.blessenger.ui.permission
 
 
-import android.Manifest
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -22,7 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
@@ -36,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -51,7 +48,7 @@ fun PermissionScreen(
     viewModel: PermissionViewModel = viewModel()
 ) {
     val context = LocalContext.current
-    val state by viewModel.state.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.initialize(context)
@@ -61,8 +58,8 @@ fun PermissionScreen(
         viewModel.refreshPermissionStates(context)
     }
 
-    LaunchedEffect(state.allGranted) {
-        if (state.allGranted) {
+    LaunchedEffect(uiState.allGranted) {
+        if (uiState.allGranted) {
             onAllPermissionsGranted()
         }
     }
@@ -106,14 +103,14 @@ fun PermissionScreen(
                 verticalArrangement =
                     Arrangement.spacedBy(12.dp)
             ) {
-                items(state.permissions) { permissionItem ->
+                items(uiState.permissions) { permissionItem ->
                     PermissionCard(permissionItem)
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (state.showRationale) {
+            if (uiState.showRationale) {
                 Text(
                     text = "some of required permissions are disabled" +
                             " open settings to turn activate them",
@@ -143,9 +140,9 @@ fun PermissionScreen(
 
             Button(
                 onClick = {
-                    val denied = state.permissions
-                        .filter { it -> !it.isGranted}
-                        .map {it -> it.permission}
+                    val denied = uiState.permissions
+                        .filter {!it.isGranted}
+                        .map {it.permission}
                         .toTypedArray()
 
                     if (denied.isNotEmpty()) {
@@ -153,10 +150,10 @@ fun PermissionScreen(
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = !state.allGranted
+                enabled = !uiState.allGranted
             ) {
                 Text(
-                    text = if (state.allGranted) "All permissions were received"
+                    text = if (uiState.allGranted) "All permissions were received"
                         else "Provide permissions"
                 )
             }

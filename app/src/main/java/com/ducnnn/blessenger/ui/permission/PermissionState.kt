@@ -1,4 +1,4 @@
-package com.ducnnn.blessenger.permission
+package com.ducnnn.blessenger.ui.permission
 
 data class PermissionItemState(
     val permission: String,
