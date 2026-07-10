@@ -45,8 +45,6 @@ fun BlessengerScreen() {
                         }
                     }
                 }
-
-
             )
         }
     ) { paddingValues ->

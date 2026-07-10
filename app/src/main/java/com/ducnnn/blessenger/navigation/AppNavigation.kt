@@ -9,8 +9,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.ducnnn.blessenger.MainScreen
 import com.ducnnn.blessenger.ui.BlessengerScreen
-import com.ducnnn.blessenger.ui.ChatScreen
-import com.ducnnn.blessenger.permission.PermissionScreen
+import com.ducnnn.blessenger.ui.permission.PermissionScreen
 
 
 @Composable
