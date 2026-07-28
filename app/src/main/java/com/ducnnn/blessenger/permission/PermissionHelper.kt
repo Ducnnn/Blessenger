@@ -40,6 +40,16 @@ object PermissionHelper {
                 description = "essential for bluetooth-scanning"
             )
         )
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            permissions.add(
+                PermissionInfo(
+                    permission = Manifest.permission.POST_NOTIFICATIONS,
+                    displayName = "Notifications",
+                    description = "Required to show mesh service status"
+                )
+            )
+        }
+
 
         return permissions
     }

@@ -5,9 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable data object PermissionScreenRoute: NavKey
 
-@Serializable data object MainScreenRoute : NavKey
 @Serializable data object BlessengerScreenRoute : NavKey
-@Serializable data object ChatScreenRoute : NavKey
 @Serializable
 sealed interface BlessengerScreenDestination : NavKey {
     @Serializable data object Chat : BlessengerScreenDestination
