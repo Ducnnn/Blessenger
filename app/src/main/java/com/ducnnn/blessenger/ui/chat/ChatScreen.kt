@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
@@ -38,6 +39,23 @@ fun ChatScreen(
     viewModel: ChatScreenViewModel = viewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    if (uiState.chatMode == ChatMode.MESH) {
+        Messages(
+            uiState = uiState,
+            onInputTextChanged = viewModel::onInputTextChanged,
+            onSendMessage = viewModel::sendMessage)
+    }
+    else {
+        Contacts()
+    }
+}
+
+@Composable
+fun Messages(
+    uiState: ChatUiState,
+    onInputTextChanged: (String) -> Unit,
+    onSendMessage: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -64,11 +82,19 @@ fun ChatScreen(
         }
         ChatInput(
             inputText = uiState.inputText,
-            onInputTextChanged = viewModel::onInputTextChanged,
-            onSendMessage = viewModel::sendMessage
+            onInputTextChanged = onInputTextChanged,
+            onSendMessage = onSendMessage
         )
     }
+}
 
+@Composable
+fun Contacts() {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
+    ) {
+
+    }
 }
 
 @Composable
@@ -124,7 +150,7 @@ fun MessageBubble(message: BLEMessage) {
         Surface(
             color = bubbleColor,
             shape = RoundedCornerShape(16.dp),
-            modifier = Modifier.widthIn(max = 280.dp) // Prevent bubbles from stretching full width
+            modifier = Modifier.widthIn(max = 280.dp)
         ) {
             Text(
                 text = "${message.sender}:${message.text}",
