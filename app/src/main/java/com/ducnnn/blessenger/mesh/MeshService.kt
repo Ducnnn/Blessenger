@@ -1,5 +1,6 @@
 package com.ducnnn.blessenger.mesh
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -7,6 +8,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import com.ducnnn.blessenger.R
 import kotlinx.coroutines.CoroutineScope
@@ -89,6 +91,7 @@ class MeshService : Service() {
         return null
     }
 
+    @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
     override fun stopService(name: Intent?): Boolean {
         BleManager.stopScan()
         return super.stopService(name)
