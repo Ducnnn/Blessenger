@@ -9,11 +9,18 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.ducnnn.blessenger.ui.BlessengerScreen
 import com.ducnnn.blessenger.ui.permission.PermissionScreen
+import java.security.Permission
 
 
 @Composable
-fun AppNavigation() {
-    val backStack = rememberNavBackStack(PermissionScreenRoute)
+fun AppNavigation(startWithPermissionGranted: Boolean = false) {
+    val startRoute = if (startWithPermissionGranted) {
+        BlessengerScreenRoute
+    } else {
+        PermissionScreenRoute
+    }
+
+    val backStack = rememberNavBackStack(startRoute)
 
     NavDisplay(
         backStack = backStack,

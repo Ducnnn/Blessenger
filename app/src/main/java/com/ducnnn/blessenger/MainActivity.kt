@@ -9,6 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.ducnnn.blessenger.navigation.AppNavigation
 import com.ducnnn.blessenger.ui.theme.BlessengerTheme
+import  com.ducnnn.blessenger.permission.PermissionHelper
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,7 +18,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             BlessengerTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    AppNavigation()
+                    val allPermissionsGranted =
+                        PermissionHelper.areAllPermissionsGranted(this)
+
+                    AppNavigation(startWithPermissionGranted = allPermissionsGranted)
                 }
             }
         }

@@ -2,11 +2,13 @@ package com.ducnnn.blessenger.ui.chat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import com.ducnnn.blessenger.mesh.MeshRouter
 
 class ChatScreenViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(ChatUiState())
@@ -14,6 +16,20 @@ class ChatScreenViewModel : ViewModel() {
 
     init {
         loadInitialMessages()
+        observeIncomingMeshMesseges()
+    }
+
+    private fun observeIncomingMeshMesseges() {
+        viewModelScope.launch {
+            MeshRouter.incomingMessages.collect {
+                incomingBleMessage ->
+                _uiState.update {
+                    currentState -> currentState.copy(
+                        messages = currentState.messages + incomingBleMessage
+                    )
+                }
+            }
+        }
     }
 
     fun onInputTextChanged(newText: String) {
