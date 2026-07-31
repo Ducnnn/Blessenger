@@ -23,7 +23,7 @@ class NodeScreenViewModel : ViewModel() {
             BleManager.leDeviceList.collect { newList ->
                 _uiState.update {
                     NodeScreenState(newList.map { item ->
-                        NearbyNode(item.device.address, item.rssi, item.lastSeenMs.milliseconds.inWholeMinutes)
+                        NearbyNode(item.deviceName, item.rssi, item.lastSeenMs.milliseconds.inWholeMinutes)
                     })
                 }
             }
