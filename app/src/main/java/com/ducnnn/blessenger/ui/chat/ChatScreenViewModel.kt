@@ -2,7 +2,6 @@ package com.ducnnn.blessenger.ui.chat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,10 +15,10 @@ class ChatScreenViewModel : ViewModel() {
 
     init {
         loadInitialMessages()
-        observeIncomingMeshMesseges()
+        observeIncomingMeshMessages()
     }
 
-    private fun observeIncomingMeshMesseges() {
+    private fun observeIncomingMeshMessages() {
         viewModelScope.launch {
             MeshRouter.incomingMessages.collect {
                 incomingBleMessage ->

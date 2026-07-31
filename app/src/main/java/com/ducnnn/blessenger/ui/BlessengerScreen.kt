@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.entryProvider
@@ -19,10 +18,13 @@ import com.ducnnn.blessenger.components.BlessengerTopAppBar
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import com.ducnnn.blessenger.mesh.MeshService
 import com.ducnnn.blessenger.navigation.BlessengerScreenDestination
 import com.ducnnn.blessenger.ui.chat.ChatScreen
 import com.ducnnn.blessenger.ui.chat.ChatScreenViewModel
+import com.ducnnn.blessenger.ui.nodes.NodesScreen
 
 
 @Composable
@@ -31,7 +33,7 @@ fun BlessengerScreen() {
     val backStack = rememberNavBackStack(BlessengerScreenDestination.Chat)
     val currentDestination = backStack.last()
     val chatViewModel: ChatScreenViewModel = viewModel()
-    LaunchedEffect(Unit) {
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
         Intent(context, MeshService::class.java).also { intent ->
             intent.action = MeshService.Actions.START.toString()
             ContextCompat.startForegroundService(context, intent)
@@ -74,6 +76,9 @@ fun BlessengerScreen() {
                 }
                 entry<BlessengerScreenDestination.Settings> {
                     SettingsScreen()
+                }
+                entry<BlessengerScreenDestination.Nodes> {
+                    NodesScreen()
                 }
             }
         )

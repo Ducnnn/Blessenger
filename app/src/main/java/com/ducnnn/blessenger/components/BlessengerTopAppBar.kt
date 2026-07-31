@@ -33,6 +33,7 @@ fun BlessengerTopAppBar(
             val title = when (currentScreen) {
                 is BlessengerScreenDestination.Chat -> "Blessenger"
                 is BlessengerScreenDestination.Settings -> "Settings"
+                is BlessengerScreenDestination.Nodes -> "Nearby Nodes"
                 else -> ""
             }
             Text(title)

@@ -59,6 +59,7 @@ class MeshService : Service() {
             )
             .build()
         startForeground(1, notification)
+        BleManager.startAdvertising()
         BleManager.startScan()
         serviceScope.launch {
             while (isActive) {
@@ -91,10 +92,11 @@ class MeshService : Service() {
         return null
     }
 
-    @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
-    override fun stopService(name: Intent?): Boolean {
+    @RequiresPermission(allOf = [Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_ADVERTISE])
+    override fun onDestroy() {
+        BleManager.stopAdvertising()
         BleManager.stopScan()
-        return super.stopService(name)
+        super.onDestroy()
     }
 
     enum class Actions {
