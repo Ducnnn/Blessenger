@@ -20,10 +20,14 @@ class MainActivity : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     val allPermissionsGranted =
                         PermissionHelper.areAllPermissionsGranted(this)
-
                     AppNavigation(startWithPermissionGranted = allPermissionsGranted)
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
     }
 }

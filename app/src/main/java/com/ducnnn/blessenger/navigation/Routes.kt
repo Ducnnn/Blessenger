@@ -10,6 +10,7 @@ import kotlinx.serialization.Serializable
 sealed interface BlessengerScreenDestination : NavKey {
     @Serializable data object Chat : BlessengerScreenDestination
     @Serializable data object Settings : BlessengerScreenDestination
+    @Serializable data object Nodes: BlessengerScreenDestination
 }
 
 

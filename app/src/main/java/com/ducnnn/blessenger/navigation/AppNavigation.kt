@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.ducnnn.blessenger.mesh.BleManager
 import com.ducnnn.blessenger.ui.BlessengerScreen
 import com.ducnnn.blessenger.ui.permission.PermissionScreen
 import java.security.Permission

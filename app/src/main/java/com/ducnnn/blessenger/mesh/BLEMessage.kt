@@ -27,7 +27,7 @@ object MeshRouter {
     val incomingMessages = _incomingMessages.asSharedFlow()
     private val scope = CoroutineScope(Dispatchers.Default)
 
-    fun onMessageRecieved(networkMessage: NetworkMeshMessage) {
+    fun onMessageReceived(networkMessage: NetworkMeshMessage) {
         scope.launch {
             mutex.withLock {
                 if (seenMessages.containsKey(networkMessage.messageId)) {
@@ -54,7 +54,7 @@ object MeshRouter {
         }
     }
 
-    private suspend fun вудшмукЕщГШ(networkMessage: NetworkMeshMessage) {
+    private suspend fun deliverToUI(networkMessage: NetworkMeshMessage) {
         val uiMessage = BLEMessage(
             text = networkMessage.text,
             sender = networkMessage.senderId,

@@ -11,6 +11,7 @@ import com.ducnnn.blessenger.navigation.BlessengerScreenDestination
 @Composable
 fun BlessengerNavBar(currentDestination: NavKey, onTabSelected : (BlessengerScreenDestination) -> Unit) {
     val tabs = listOf(
+        BottomTab("Nodes", BlessengerScreenDestination.Nodes),
         BottomTab("Chat", BlessengerScreenDestination.Chat),
         BottomTab("Settings", BlessengerScreenDestination.Settings)
     )
