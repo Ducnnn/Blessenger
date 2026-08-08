@@ -59,8 +59,8 @@ class MeshService : Service() {
             )
             .build()
         startForeground(1, notification)
-        BleManager.startAdvertising()
-        BleManager.startScan()
+        BleManager.startPresenceAdvertising()
+        BleManager.startPresenceScan()
         serviceScope.launch {
             while (isActive) {
                 retrieveNearbyNode()
@@ -94,8 +94,8 @@ class MeshService : Service() {
 
     @RequiresPermission(allOf = [Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_ADVERTISE])
     override fun onDestroy() {
-        BleManager.stopAdvertising()
-        BleManager.stopScan()
+        BleManager.stopPresenceAdvertising()
+        BleManager.stopPresenceScan()
         super.onDestroy()
     }
 

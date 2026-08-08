@@ -52,7 +52,7 @@ fun ChatScreen(
 
 @Composable
 fun Messages(
-    uiState: ChatUiState,
+    uiState: ChatState,
     onInputTextChanged: (String) -> Unit,
     onSendMessage: () -> Unit
 ) {

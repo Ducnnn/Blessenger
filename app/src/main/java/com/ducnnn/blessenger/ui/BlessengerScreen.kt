@@ -25,6 +25,7 @@ import com.ducnnn.blessenger.navigation.BlessengerScreenDestination
 import com.ducnnn.blessenger.ui.chat.ChatScreen
 import com.ducnnn.blessenger.ui.chat.ChatScreenViewModel
 import com.ducnnn.blessenger.ui.nodes.NodesScreen
+import com.ducnnn.blessenger.ui.settings.SettingsScreen
 
 
 @Composable
@@ -86,7 +87,3 @@ fun BlessengerScreen() {
 }
 
 
-@Composable
-fun SettingsScreen() {
-    Text(text = "Settings")
-}
