@@ -2,16 +2,20 @@ package com.ducnnn.blessenger.ui.chat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ducnnn.blessenger.mesh.BleManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import com.ducnnn.blessenger.mesh.MeshRouter
+import com.ducnnn.blessenger.mesh.NetworkMeshMessage
+import com.ducnnn.blessenger.user.UserDataManager
+
 
 class ChatScreenViewModel : ViewModel() {
-    private val _uiState = MutableStateFlow(ChatUiState())
-    val uiState: StateFlow<ChatUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(ChatState())
+    val uiState: StateFlow<ChatState> = _uiState.asStateFlow()
 
     init {
         loadInitialMessages()
@@ -43,10 +47,19 @@ class ChatScreenViewModel : ViewModel() {
 
         val newUserMessage = BLEMessage(
             text = currentText.trim(),
-            sender = "MyUserID",
+            sender = UserDataManager.getSavedId(),
             fromCurrentUser = true
         )
         //TODO(Make BLE sending logic here)
+        val meshMessage = NetworkMeshMessage(
+            targetId = "SampleId",
+            senderId = UserDataManager.getSavedId(),
+            messageId = "",
+            text = currentText,
+            ttl = 1
+        )
+        BleManager.startMessageAdvertising(meshMessage)
+
         _uiState.update { currentState ->
             currentState.copy(
                 messages = currentState.messages + newUserMessage,

@@ -3,6 +3,8 @@ package com.ducnnn.blessenger.mesh
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothGattCallback
+import android.bluetooth.BluetoothGattServerCallback
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.AdvertiseData
 import android.bluetooth.le.AdvertisingSet
@@ -18,20 +20,24 @@ import android.os.ParcelUuid
 import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.core.content.ContextCompat
+import com.ducnnn.blessenger.user.UserDataManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.time.Duration.Companion.milliseconds
 
 
 object BleManager {
     private var bluetoothAdapter: BluetoothAdapter? = null
-    private var advertiseCallback: AdvertisingSetCallback? = null
+    private var advertisePresenceCallback: AdvertisingSetCallback? = null
     private val _leDeviceList = MutableStateFlow<List<DeviceNode>>(emptyList())
     private val deviceMap = ConcurrentHashMap<String, DeviceNode>()
     private val APP_UUID = ParcelUuid.fromString("0000b1e5-0000-1000-8000-00805f9b34fb")
+    private val MESSAGE_UUID = ParcelUuid.fromString("6180a7f4-65f2-4955-9347-7bdd46136e0e")
     private var isScanning = false
-    private var isAdvertising = false
+    private var isPresenceAdvertising = false
+    private var isMessageAdvertising = false
     private lateinit var appContext: Context
     val leDeviceList: StateFlow<List<DeviceNode>> = _leDeviceList.asStateFlow()
 
@@ -41,11 +47,78 @@ object BleManager {
         val bluetoothManager =
             appContext.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         bluetoothAdapter = bluetoothManager.adapter
-        startAdvertising()
+        startPresenceAdvertising()
     }
 
-    fun startAdvertising() {
-        if (isAdvertising) return
+    fun startMessageAdvertising(message: NetworkMeshMessage) {
+        if (isMessageAdvertising) return
+        val messageBytes = message.toByteArray()
+        if (messageBytes.size > 234) return
+        if (ContextCompat.checkSelfPermission(
+                appContext,
+                Manifest.permission.BLUETOOTH_ADVERTISE
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+
+        val advertiser = bluetoothAdapter?.bluetoothLeAdvertiser
+        val advertiseSetParameters = AdvertisingSetParameters.Builder()
+            .setLegacyMode(false)
+            .setAnonymous(false)
+            .setConnectable(false)
+            .setInterval(AdvertisingSetParameters.INTERVAL_HIGH)
+            .setIncludeTxPower(true)
+            .setScannable(false)
+            .build()
+
+        val advertiseData = AdvertiseData.Builder()
+            .addServiceData(MESSAGE_UUID, messageBytes)
+            .build()
+
+        val advertiseMessageCallback = object : AdvertisingSetCallback() {
+            override fun onAdvertisingSetStarted(
+                advertisingSet: AdvertisingSet?,
+                txPower: Int,
+                status: Int
+            ) {
+                super.onAdvertisingSetStarted(advertisingSet, txPower, status)
+                Log.i(
+                    "BleManager",
+                    ("onMessageAdvertisingSetStarted(): txPower:" + txPower + " , status: " + status)
+                )
+            }
+
+            override fun onAdvertisingDataSet(advertisingSet: AdvertisingSet?, status: Int) {
+                super.onAdvertisingDataSet(advertisingSet, status)
+                Log.i("BleManager", "onMessageAdvertisingDataSet() :status:$status")
+            }
+
+            override fun onScanResponseDataSet(advertisingSet: AdvertisingSet?, status: Int) {
+                super.onScanResponseDataSet(advertisingSet, status)
+                Log.i("BleManager", "onMessageScanResponseDataSet(): status:$status")
+            }
+
+            override fun onAdvertisingSetStopped(advertisingSet: AdvertisingSet?) {
+                super.onAdvertisingSetStopped(advertisingSet)
+                Log.i("BleManager", "onMessageAdvertisingSetStopped():")
+            }
+        }
+
+        advertiser?.startAdvertisingSet(
+            advertiseSetParameters,
+            advertiseData,
+            null,
+            null,
+            null,
+            10000,
+            0,
+            advertiseMessageCallback
+        )
+    }
+
+    fun startPresenceAdvertising() {
+        if (isPresenceAdvertising) return
         if (ContextCompat.checkSelfPermission(
                 appContext,
                 Manifest.permission.BLUETOOTH_ADVERTISE
@@ -64,32 +137,35 @@ object BleManager {
             .build()
 
         val advertiseData = AdvertiseData.Builder()
-            .setIncludeDeviceName(true)
-            .addServiceUuid(APP_UUID)
+            .addServiceData(APP_UUID, UserDataManager.getSavedId().toByteArray())
             .build()
 
-        advertiseCallback = object : AdvertisingSetCallback() {
+        advertisePresenceCallback = object : AdvertisingSetCallback() {
             override fun onAdvertisingSetStarted(
                 advertisingSet: AdvertisingSet?,
                 txPower: Int,
                 status: Int
             ) {
                 super.onAdvertisingSetStarted(advertisingSet, txPower, status)
-                Log.i("BleManager", ("onAdvertisingSetStarted(): txPower:" + txPower + " , status: " + status))
+                Log.i(
+                    "BleManager",
+                    ("onPresenceAdvertisingSetStarted(): txPower:" + txPower + " , status: " + status)
+                )
             }
+
             override fun onAdvertisingDataSet(advertisingSet: AdvertisingSet?, status: Int) {
                 super.onAdvertisingDataSet(advertisingSet, status)
-                Log.i("BleManager", "onAdvertisingDataSet() :status:$status")
+                Log.i("BleManager", "onPresenceAdvertisingDataSet() :status:$status")
             }
 
             override fun onScanResponseDataSet(advertisingSet: AdvertisingSet?, status: Int) {
                 super.onScanResponseDataSet(advertisingSet, status)
-                Log.i("BleManager", "onScanResponseDataSet(): status:$status")
+                Log.i("BleManager", "onPresenceScanResponseDataSet(): status:$status")
             }
 
             override fun onAdvertisingSetStopped(advertisingSet: AdvertisingSet?) {
                 super.onAdvertisingSetStopped(advertisingSet)
-                Log.i("BleManager", "onAdvertisingSetStopped():")
+                Log.i("BleManager", "onPresenceAdvertisingSetStopped():")
             }
         }
         advertiser?.startAdvertisingSet(
@@ -98,25 +174,28 @@ object BleManager {
             null,
             null,
             null,
-            advertiseCallback
+            advertisePresenceCallback
         )
-        isAdvertising = true
+        isPresenceAdvertising = true
     }
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_ADVERTISE)
-    fun stopAdvertising() {
-        if (!isAdvertising) return
+    fun stopPresenceAdvertising() {
+        if (!isPresenceAdvertising) return
         val advertiser = bluetoothAdapter?.bluetoothLeAdvertiser
-        advertiser?.stopAdvertisingSet(advertiseCallback)
-        isAdvertising = false
+        advertiser?.stopAdvertisingSet(advertisePresenceCallback)
+        isPresenceAdvertising = false
     }
 
-    fun startScan() {
+    fun startPresenceScan() {
         if (isScanning) return
         Log.i("BleManager", "Starting to scan")
         val scanner = bluetoothAdapter?.bluetoothLeScanner
         val filter = ScanFilter.Builder()
-            .setServiceUuid(APP_UUID)
+            .setServiceData(
+                APP_UUID,
+                byteArrayOf()
+            )
             .build()
         val settings = ScanSettings.Builder()
             .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
@@ -128,7 +207,7 @@ object BleManager {
     }
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
-    fun stopScan() {
+    fun stopPresenceScan() {
         if (!isScanning) return
         bluetoothAdapter?.bluetoothLeScanner?.stopScan(leScanCallback)
         isScanning = false
@@ -144,7 +223,8 @@ object BleManager {
         @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
         override fun onScanResult(callbackType: Int, result: ScanResult) {
             super.onScanResult(callbackType, result)
-            val broadcastedName = result.scanRecord?.deviceName ?: "No Name Broadcasted"
+            val serviceDataBytes: ByteArray? = result.scanRecord?.getServiceData(APP_UUID)
+            val broadcastedName = serviceDataBytes?.decodeToString() ?: "No Name Broadcasted"
             deviceMap[broadcastedName] = DeviceNode(
                 device = result.device,
                 deviceName = broadcastedName,
