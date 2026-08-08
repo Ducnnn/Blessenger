@@ -17,7 +17,24 @@ object UserDataManager {
         }
     }
 
-    fun getSavedId(): String {
-        return sharedPreferences.getString("user_id", "sampleId") ?: ""
+    private fun generateHexId(): String {
+        val allowedCharacters = ('0'..'9') + ('A'..'F')
+        val arr = mutableListOf<Char> ()
+        for (i in 1..8) {
+            arr.add(allowedCharacters.random())
+        }
+        return arr.joinToString("")
     }
+
+    fun getSavedId() : String {
+        var id = sharedPreferences.getString("user_id", null)
+
+        if (id == null) {
+            id = generateHexId()
+            saveUserId(id)
+        }
+        return id
+    }
+
+
 }
