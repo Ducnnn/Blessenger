@@ -17,8 +17,8 @@ object UserDataManager {
         }
     }
 
-    private fun generateHexId(): String {
-        val allowedCharacters = ('0'..'9') + ('A'..'F')
+    fun generateHexId(): String {
+        val allowedCharacters = ('0'..'9') + ('a'..'f')
         val arr = mutableListOf<Char> ()
         for (i in 1..8) {
             arr.add(allowedCharacters.random())
