@@ -32,7 +32,6 @@ class MeshService : Service() {
         when (intent?.action) {
             Actions.START.toString() -> startMeshService()
             Actions.STOP.toString() -> stopSelf()
-
         }
 
         return super.onStartCommand(intent, flags, startId)
@@ -59,11 +58,17 @@ class MeshService : Service() {
             )
             .build()
         startForeground(1, notification)
-        BleManager.startPresenceAdvertising()
-        BleManager.startPresenceScan()
+
+        BleManager.apply {
+            this.startPresenceAdvertising()
+            this.startPresenceScan()
+            this.startMessageScan()
+        }
+
         serviceScope.launch {
             while (isActive) {
                 retrieveNearbyNode()
+                MeshRouter.sendQueue()
                 delay(5000.milliseconds)
             }
         }
@@ -94,8 +99,12 @@ class MeshService : Service() {
 
     @RequiresPermission(allOf = [Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_ADVERTISE])
     override fun onDestroy() {
-        BleManager.stopPresenceAdvertising()
-        BleManager.stopPresenceScan()
+
+        BleManager.apply {
+            this.stopPresenceAdvertising()
+            this.stopPresenceScan()
+            this.stopMessageScan()
+        }
         super.onDestroy()
     }
 

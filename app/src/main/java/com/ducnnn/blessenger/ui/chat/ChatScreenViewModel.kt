@@ -2,15 +2,14 @@ package com.ducnnn.blessenger.ui.chat
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ducnnn.blessenger.mesh.BleManager
+import com.ducnnn.blessenger.mesh.MeshRouter
+import com.ducnnn.blessenger.mesh.NetworkMeshMessage
+import com.ducnnn.blessenger.user.UserDataManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import com.ducnnn.blessenger.mesh.MeshRouter
-import com.ducnnn.blessenger.mesh.NetworkMeshMessage
-import com.ducnnn.blessenger.user.UserDataManager
 
 
 class ChatScreenViewModel : ViewModel() {
@@ -24,10 +23,9 @@ class ChatScreenViewModel : ViewModel() {
 
     private fun observeIncomingMeshMessages() {
         viewModelScope.launch {
-            MeshRouter.incomingMessages.collect {
-                incomingBleMessage ->
-                _uiState.update {
-                    currentState -> currentState.copy(
+            MeshRouter.incomingMessages.collect { incomingBleMessage ->
+                _uiState.update { currentState ->
+                    currentState.copy(
                         messages = currentState.messages + incomingBleMessage
                     )
                 }
@@ -50,15 +48,15 @@ class ChatScreenViewModel : ViewModel() {
             sender = UserDataManager.getSavedId(),
             fromCurrentUser = true
         )
-        //TODO(Make BLE sending logic here)
+
         val meshMessage = NetworkMeshMessage(
-            targetId = "SampleId",
+            targetId = "FFFFFFFF",
             senderId = UserDataManager.getSavedId(),
-            messageId = "",
+            messageId = UserDataManager.generateHexId(),
             text = currentText,
-            ttl = 1
+            ttl = 7
         )
-        BleManager.startMessageAdvertising(meshMessage)
+        MeshRouter.addMessageToQueue(meshMessage)
 
         _uiState.update { currentState ->
             currentState.copy(
@@ -73,6 +71,7 @@ class ChatScreenViewModel : ViewModel() {
             currentState.copy(chatMode = chatMode)
         }
     }
+
     private fun loadInitialMessages() {
         _uiState.update { it.copy(isLoading = true) }
 

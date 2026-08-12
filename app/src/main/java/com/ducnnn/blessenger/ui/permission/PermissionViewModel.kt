@@ -8,11 +8,11 @@ import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
 import com.ducnnn.blessenger.permission.PermissionHelper
+import com.ducnnn.blessenger.permission.PermissionPreferences
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import com.ducnnn.blessenger.permission.PermissionPreferences
 
 class PermissionViewModel : ViewModel() {
 
