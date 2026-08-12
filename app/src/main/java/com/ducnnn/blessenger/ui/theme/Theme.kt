@@ -1,5 +1,9 @@
 package com.ducnnn.blessenger.ui.theme
 
+import com.ducnnn.blessenger.ui.theme.BgBlue
+import com.ducnnn.blessenger.ui.theme.BgPurple
+import com.ducnnn.blessenger.ui.theme.BgDarkBlue
+import com.ducnnn.blessenger.ui.theme.BgLightBlue
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -9,48 +13,44 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
-)
-
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
+private val LiguidGlassColorScheme = darkColorScheme(
+    primary = Color(0xFF90CAF9),
     onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
-)
+
+    primaryContainer = Color(0x3390CAF9),
+    onPrimaryContainer = Color.White,
+
+    background = Color.Transparent,
+    onBackground = Color.White,
+    surface = Color.Transparent,
+    onSurface = Color.White,
+    surfaceVariant = Color(0x33FFFFFF),
+    onSurfaceVariant = Color(0xCCFFFFFF),
+
+    error = Color(0xFFEF5350),
+    onError = Color.White,
+    errorContainer = Color(0x33EF5350),
+    onErrorContainer = Color.White,
+
+    outline = Color(0x40FFFFFF),
+    outlineVariant = Color(0x20FFFFFF)
+
+
+
+    )
+
 
 @Composable
 fun BlessengerTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
 
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = LiguidGlassColorScheme,
         typography = Typography,
         content = content
     )
