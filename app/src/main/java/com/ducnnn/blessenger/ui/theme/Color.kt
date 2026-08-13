@@ -8,3 +8,7 @@ val BgBlue = Color(0xFF42A5F5)
 val BgDarkBlue = Color(0xFF1565C0)
 val BgPurple = Color(0xFF7B1FA2)
 val BgDeepPurple = Color(0xFF4A148C)
+
+val BgLightGreen = Color(0xFF1D7373)
+
+val BgPink = Color(0xFF860049)
