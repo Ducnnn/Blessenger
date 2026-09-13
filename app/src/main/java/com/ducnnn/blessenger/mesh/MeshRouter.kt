@@ -1,5 +1,6 @@
 package com.ducnnn.blessenger.mesh
 
+import com.ducnnn.blessenger.db.DatabaseManager
 import com.ducnnn.blessenger.ui.chat.BLEMessage
 import com.ducnnn.blessenger.user.UserDataManager
 import kotlinx.coroutines.CoroutineScope
@@ -32,8 +33,12 @@ object MeshRouter {
                 seenMessages[networkMessage.messageId] = System.currentTimeMillis()
                 cleanUpStaleMessages()
             }
-            if (networkMessage.targetId == myDeviceId || networkMessage.targetId == "ffffffff") {
+            if (networkMessage.targetId == myDeviceId ) {
                 //Deliver message to cache group chat
+                DatabaseManager.addMessage(networkMessage)
+
+            }
+            if(networkMessage.targetId == "ffffffff") {
                 deliverToUI(networkMessage)
             }
 

@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,6 +19,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,9 +33,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ducnnn.blessenger.components.glassmorphic
 
 @Composable
 fun ChatScreen(
@@ -42,9 +48,9 @@ fun ChatScreen(
         Messages(
             uiState = uiState,
             onInputTextChanged = viewModel::onInputTextChanged,
-            onSendMessage = viewModel::sendMessage)
-    }
-    else {
+            onSendMessage = viewModel::sendMessage
+        )
+    } else {
         Contacts()
     }
 }
@@ -88,11 +94,57 @@ fun Messages(
 }
 
 @Composable
-fun Contacts() {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
+fun Contacts(
+    contacts: List<String>,
+    onContactClicked: (String) -> Unit,
+    onAddContactClicked: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            items(contacts) { contact ->
+                ContactRow(contact, { onContactClicked(contact) })
+            }
+        }
+        Button(
+            onClick = onAddContactClicked,
+            modifier = Modifier
+                .glassmorphic(),
+            colors = ButtonColors(
+                Color.Transparent,
+                contentColor = Color.White,
+                disabledContainerColor = Color.Transparent,
+                disabledContentColor = Color.White
+            )
+        ) {
+            Text("Add Contact")
+        }
+    }
 
+}
+
+@Composable
+fun ContactRow(userId: String, onContactClicked: (String) -> Unit) {
+    Button(
+        onClick = { onContactClicked },
+        modifier = Modifier
+            .height(70.dp)
+            .width(200.dp)
+            .glassmorphic(backgroundAlpha = 0.4f),
+        colors = ButtonColors(
+            Color.Transparent,
+            contentColor = Color.White,
+            disabledContainerColor = Color.Transparent,
+            disabledContentColor = Color.White
+        )
+    ) {
+        Text(userId)
     }
 }
 
@@ -143,13 +195,15 @@ fun MessageBubble(message: BLEMessage) {
     }
 
     Box(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth(),
         contentAlignment = alignment
     ) {
         Surface(
-            color = bubbleColor,
             shape = RoundedCornerShape(16.dp),
-            modifier = Modifier.widthIn(max = 280.dp)
+            modifier = Modifier
+                .widthIn(max = 280.dp)
+                .glassmorphic(backgroundAlpha = 0.2f)
         ) {
             Text(
                 text = "${message.sender}:${message.text}",

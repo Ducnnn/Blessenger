@@ -81,7 +81,7 @@ fun PermissionScreen(
             Spacer(modifier = Modifier.height(48.dp))
 
             Text(
-                text = "Permitions",
+                text = "Permissions",
                 style =
                     MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold

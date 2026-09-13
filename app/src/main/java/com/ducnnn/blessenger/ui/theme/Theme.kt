@@ -1,11 +1,6 @@
 package com.ducnnn.blessenger.ui.theme
 
-import com.ducnnn.blessenger.ui.theme.BgBlue
-import com.ducnnn.blessenger.ui.theme.BgPurple
-import com.ducnnn.blessenger.ui.theme.BgDarkBlue
-import com.ducnnn.blessenger.ui.theme.BgLightBlue
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
+
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme

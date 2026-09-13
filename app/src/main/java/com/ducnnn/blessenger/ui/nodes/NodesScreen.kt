@@ -23,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.ducnnn.blessenger.components.glassmorphic
 
 @Composable
 fun NodesScreen(
@@ -48,10 +49,7 @@ fun NodeRow(node: NearbyNode) {
             .fillMaxWidth()
             .height(40.dp)
             .padding(4.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .background(
-                color = Color(0xff3d9ccc)
-            ),
+            .glassmorphic(backgroundAlpha = 0.2f),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
