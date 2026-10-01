@@ -1,5 +1,7 @@
 package com.ducnnn.blessenger.mesh
 
+import android.util.Log
+import com.ducnnn.blessenger.db.DatabaseManager
 import com.ducnnn.blessenger.ui.chat.BLEMessage
 import com.ducnnn.blessenger.user.UserDataManager
 import kotlinx.coroutines.CoroutineScope
@@ -28,12 +30,16 @@ object MeshRouter {
                 if (seenMessages.containsKey(networkMessage.messageId) || myDeviceId == networkMessage.senderId) {
                     return@launch
                 }
-
                 seenMessages[networkMessage.messageId] = System.currentTimeMillis()
                 cleanUpStaleMessages()
             }
-            if (networkMessage.targetId == myDeviceId || networkMessage.targetId == "ffffffff") {
-                //Deliver message to cache group chat
+            if (networkMessage.targetId == myDeviceId ) {
+
+                DatabaseManager.addMessage(networkMessage)
+
+            }
+            if(networkMessage.targetId == "ffffffff") {
+
                 deliverToUI(networkMessage)
             }
 
@@ -72,20 +78,27 @@ object MeshRouter {
 
     fun addMessageToQueue(message: NetworkMeshMessage) {
         messageQueue.addLast(message)
+        Log.d("MeshRouter", "addMessageToQueue() added message to queue with " +
+                "messageId:${message.messageId}, ttl:${message.ttl} increasing queue size to ${messageQueue.size}")
     }
 
     fun getMessageFromQueue(): NetworkMeshMessage {
-        return messageQueue.first()
+        return messageQueue.removeFirst()
     }
 
     suspend fun sendQueue() {
-        if (isEmptying || messageQueue.isEmpty()) return
+        if (isEmptying || messageQueue.isEmpty()) {
+            Log.v("MeshRouter", "sendQueue() is skipped: Queue is empty")
+            return
+        }
         isEmptying = true
+        Log.d("MeshRouter", "sendQueue() started emptying the queue")
         while (messageQueue.isNotEmpty()) {
             val message = getMessageFromQueue()
             BleManager.startMessageAdvertising(message)
             delay(15000.milliseconds)
         }
         isEmptying = false
+        Log.d("MeshRouter", "sendQueue() finished emptying the queue")
     }
 }

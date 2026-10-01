@@ -5,9 +5,9 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import android.util.Log
 import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import com.ducnnn.blessenger.R
@@ -29,6 +29,7 @@ class MeshService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.i("MeshService", "onStartCommand() action: ${intent?.action}")
         when (intent?.action) {
             Actions.START.toString() -> startMeshService()
             Actions.STOP.toString() -> stopSelf()
@@ -67,9 +68,13 @@ class MeshService : Service() {
 
         serviceScope.launch {
             while (isActive) {
-                retrieveNearbyNode()
-                MeshRouter.sendQueue()
-                delay(5000.milliseconds)
+                try {
+                    retrieveNearbyNode()
+                    MeshRouter.sendQueue()
+                    delay(5000.milliseconds)
+                } catch (e: Exception) {
+                    Log.e("MeshService", "startMeshService() loop stopped:$e")
+                }
             }
         }
 
@@ -84,7 +89,7 @@ class MeshService : Service() {
             NotificationManager.IMPORTANCE_LOW
         )
 
-        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         manager.createNotificationChannel(channel)
 
     }

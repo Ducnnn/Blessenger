@@ -15,5 +15,7 @@ data class ChatState(
     val messages: List<BLEMessage> = emptyList(),
     val inputText: String = "",
     val chatMode: ChatMode = ChatMode.MESH,
+    val contactId: String = "ffffffff",
+    val contactName: String = "",
     val isLoading: Boolean = false
 )
