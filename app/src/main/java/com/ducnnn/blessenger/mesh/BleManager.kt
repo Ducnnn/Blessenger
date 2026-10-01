@@ -49,23 +49,34 @@ object BleManager {
     }
 
     fun startMessageAdvertising(message: NetworkMeshMessage) {
-        if (isMessageAdvertising) return
+        if (isMessageAdvertising) {
+            Log.w("BleManager", "startAdvertising() dropped: Already advertising")
+            return
+        }
         val messageBytes = message.toByteArray()
-        if (messageBytes.size > 234) return
+        if (messageBytes.size > 234) {
+            Log.w(
+                "BleManager",
+                "startAdvertising() dropped: message is too big: ${messageBytes.size} < 234"
+            )
+            return
+        }
         if (ContextCompat.checkSelfPermission(
                 appContext,
                 Manifest.permission.BLUETOOTH_ADVERTISE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
+            Log.e("BleManager", "startAdvertising() dropped: BLUETOOTH_ADVERTISE not granted")
             return
         }
 
         val advertiser = bluetoothAdapter?.bluetoothLeAdvertiser
         val advertiseSetParameters = AdvertisingSetParameters.Builder()
             .setLegacyMode(false)
+            .setTxPowerLevel(AdvertisingSetParameters.TX_POWER_HIGH)
             .setAnonymous(false)
             .setConnectable(false)
-            .setInterval(AdvertisingSetParameters.INTERVAL_HIGH)
+            .setInterval(AdvertisingSetParameters.INTERVAL_LOW)
             .setIncludeTxPower(true)
             .setScannable(false)
             .build()
@@ -83,8 +94,21 @@ object BleManager {
                 super.onAdvertisingSetStarted(advertisingSet, txPower, status)
                 Log.i(
                     "BleManager",
-                    ("onMessageAdvertisingSetStarted(): txPower:" + txPower + " , status: " + status)
+                    ("onMessageAdvertisingSetStarted(): txPower:$txPower , status: $status")
                 )
+            }
+
+            @RequiresPermission(Manifest.permission.BLUETOOTH_ADVERTISE)
+            override fun onAdvertisingEnabled(
+                advertisingSet: AdvertisingSet?,
+                enable: Boolean,
+                status: Int
+            ) {
+                super.onAdvertisingEnabled(advertisingSet, enable, status)
+                Log.i("BleManager", "onMessageAdvertisingEnabled(): enable:$enable, status:$status")
+                if (!enable) {
+                    bluetoothAdapter?.bluetoothLeAdvertiser?.stopAdvertisingSet(this)
+                }
             }
 
             override fun onAdvertisingDataSet(advertisingSet: AdvertisingSet?, status: Int) {
@@ -99,17 +123,19 @@ object BleManager {
 
             override fun onAdvertisingSetStopped(advertisingSet: AdvertisingSet?) {
                 super.onAdvertisingSetStopped(advertisingSet)
+                isMessageAdvertising = false
                 Log.i("BleManager", "onMessageAdvertisingSetStopped():")
             }
         }
-        MeshRouter.notifyMessageSent(message.targetId)
+        isMessageAdvertising = true
+        MeshRouter.notifyMessageSent(message.messageId)
         advertiser?.startAdvertisingSet(
             advertiseSetParameters,
             advertiseData,
             null,
             null,
             null,
-            10000,
+            1000,
             0,
             advertiseMessageCallback
         )
@@ -267,7 +293,7 @@ object BleManager {
             val serviceDataBytes: ByteArray? = result.scanRecord?.getServiceData(MESSAGE_UUID)
             if (serviceDataBytes != null) {
                 val message = NetworkMeshMessage.fromByteArray(serviceDataBytes)
-                Log.i("BleManager", "Received message: \n$message")
+                Log.i("BleManager", "Received message: senderId: ${message.senderId} ")
                 MeshRouter.onMessageReceived(message)
             }
         }

@@ -34,6 +34,7 @@ fun BlessengerTopAppBar(
                 is BlessengerScreenDestination.Chat -> "Blessenger"
                 is BlessengerScreenDestination.Settings -> "Settings"
                 is BlessengerScreenDestination.Nodes -> "Nearby Nodes"
+                is BlessengerScreenDestination.ChatWithContact -> currentScreen.contactName
                 else -> ""
             }
             Text(title)

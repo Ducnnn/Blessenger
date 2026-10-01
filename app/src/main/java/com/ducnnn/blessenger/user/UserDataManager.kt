@@ -19,14 +19,15 @@ object UserDataManager {
 
     fun generateHexId(): String {
         val allowedCharacters = ('0'..'9') + ('a'..'f')
-        val arr = mutableListOf<Char> ()
+        val arr = mutableListOf<Char>()
         for (i in 1..8) {
             arr.add(allowedCharacters.random())
         }
-        return arr.joinToString("")
+        val id = arr.joinToString("")
+        return if (id == "ffffffff") generateHexId() else id
     }
 
-    fun getSavedId() : String {
+    fun getSavedId(): String {
         var id = sharedPreferences.getString("user_id", null)
 
         if (id == null) {

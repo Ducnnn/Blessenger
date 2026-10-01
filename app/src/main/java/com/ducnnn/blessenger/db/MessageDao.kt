@@ -15,7 +15,7 @@ interface MessageDao {
         """
         SELECT * FROM messages
         WHERE (sender_id = :userId AND target_id = :senderId) OR (sender_id = :senderId AND target_id = :userId)
-        ORDER BY timestamp  DESC
+        ORDER BY uid  ASC
         """
     )
     fun findBySenderId(userId : String, senderId: String): Flow<List<DatabaseMessage>>

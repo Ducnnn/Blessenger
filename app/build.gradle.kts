@@ -64,4 +64,5 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.room3.runtime)
     ksp("androidx.room3:room3-compiler:3.0.1")
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
 }
