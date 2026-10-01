@@ -131,7 +131,7 @@ fun ContactRow(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddContactDialog(
-    id: String, name: String,
+    id: String, name: String, error: String?,
     onIdChanged: (String) -> Unit, onNameChanged: (String) -> Unit,
     onConfirm: (String, String) -> Unit, onDismiss: () -> Unit
 ) {
