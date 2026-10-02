@@ -100,7 +100,7 @@ class ContactsScreenViewModel : ViewModel() {
         }
 
         viewModelScope.launch {
-            DatabaseManager.addContact(id, uiState.value.newContactName)
+            DatabaseManager.addContact(id, uiState.value.newContactName.lowercase())
         }
         dismissAddContactDialog()
     }
