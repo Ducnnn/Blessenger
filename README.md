@@ -32,7 +32,7 @@ No internet, cell signal, Wi-Fi, servers or pairing. Every phone running Blessen
 
 |                             Mesh group                             |                            Contacts                             |                           Nearby nodes                           |                            Settings                             |
 |:------------------------------------------------------------------:|:---------------------------------------------------------------:|:----------------------------------------------------------------:|:---------------------------------------------------------------:|
-| <img src="screenshots/chat.jpg" alt="Mesh group chat" width="180"> | <img src="screenshots/Contacts.jpg" alt="Contacts" width="180"> | <img src="screenshots/Nodes.jpg" alt="Nearby nodes" width="180"> | <img src="screenshots/Settings.jpg" alt="Settings" width="180"> |
+| <img src="screenshots/Chat.jpg" alt="Mesh group chat" width="180"> | <img src="screenshots/Contacts.jpg" alt="Contacts" width="180"> | <img src="screenshots/Nodes.jpg" alt="Nearby nodes" width="180"> | <img src="screenshots/Settings.jpg" alt="Settings" width="180"> |
 
 ##  Build Requirements
 
