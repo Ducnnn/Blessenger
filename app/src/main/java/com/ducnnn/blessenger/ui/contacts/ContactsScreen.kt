@@ -3,6 +3,7 @@ package com.ducnnn.blessenger.ui.contacts
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -64,7 +65,7 @@ fun ContactsScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LazyColumn(
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             items(uiState.contacts.entries.toList()) { entry ->
                 ContactRow(
@@ -104,6 +105,7 @@ fun ContactRow(
         modifier = Modifier
             .height(80.dp)
             .width(300.dp)
+            .padding(4.dp)
             .glassmorphic(backgroundAlpha = 0.4f)
             .combinedClickable(
                 onClick = { onClick(id, contactName) },
