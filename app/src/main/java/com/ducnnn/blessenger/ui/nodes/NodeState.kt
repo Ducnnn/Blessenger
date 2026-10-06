@@ -7,5 +7,8 @@ data class NearbyNode(
     val lastSeen : String
 )
 data class NodeScreenState(
-    val nodes : List<NearbyNode> = emptyList()
+    val nodes : List<NearbyNode> = emptyList(),
+    val addContactName : String = "",
+    val addContactId : String = "",
+    val showAddContactDialog: Boolean = false
 )
